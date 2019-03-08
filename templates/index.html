@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Set the character set.-->
+    <meta charset="UTF-8">
+    <!-- Set the page title.-->
+    <title>LilyPADz</title>
+    <!-- Include style sheets; bootstrap, select, toggle, project style. -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Skranji">
+    <link rel='shortcut icon' type='image/x-icon'
+          href='../static/favicon.png'/>
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Include javascript; jQuery, plotly, bootstrap, select, toggle, project JS. -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="../static/js/index.js"></script>
+</head>
+
+<!-- Define the header of the page. -->
+<header class="row">
+    <img id="header-img" class="col-3 text-center"
+         src="../static/image/toad.png" alt="Toadyboi">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-12 text-center" style="padding-top: 5px">
+                <h1>Cane Toad Visualizations</h1>
+            </div>
+            <div class="col-12 text-center">
+                <h4><i>A LilyPADz Production</i></h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"
+         style="display: flex; justify-content: center; align-items: center">
+        <button type="button" id="instruction" class="btn btn-outline-primary">
+            Instructions
+        </button>
+    </div>
+</header>
+
+<!-- Define the body of the page. -->
+<body class="container-fluid">
+<div id="page-body" class="row">
+
+    <!-- Define the left column which contains options. -->
+    <div class="option-div col-3">
+
+        <!-- Toggle that controls data related options. -->
+        <div class="row" style="padding-top: 10px">
+            <h5 class="text-left" style="width: 90%; margin: auto">
+                <i class="fas fa-angle-double-down" aria-expanded="false"
+                   data-toggle="collapse" data-target="#data-option"></i>
+                <em> Data Options:</em>
+            </h5>
+            <hr style="width: 90%">
+        </div>
+
+        <!-- Data related options. -->
+        <div id="data-option" class="row collapse show">
+            <div class="col-12 text-center" style="padding-top: 10px">
+                <form id="upload" method="POST" enctype="multipart/form-data">
+                    <input id="file-input-trigger" type="file" name="file"
+                           style="width: 90%; padding-bottom: 10px">
+                    <button id="do-upload" class="btn btn-outline-info"
+                            type="button" style="width: 90%; height: 40px">
+                        Upload
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-12 text-center" style="padding-top: 10px">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Choose your method of analysis:</em>
+                </h5>
+                <hr>
+                <label for="mode-toggle" style="display: none"></label>
+                <input data-toggle="toggle" id="mode-toggle" type="checkbox"
+                       data-onstyle="success" data-offstyle="primary"
+                       data-width="90%" data-height="40px"
+                       data-on="<h5>Compare Toads</h5>"
+                       data-off="<h5>Analyze One Toad</h5>">
+            </div>
+
+            <div class="col-12 text-center" id="one-toad-option"
+                 style="padding-top: 10px; display: none">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Select one toad:</em>
+                </h5>
+                <hr>
+                <label style="width: 100%">
+                    <select class="selectpicker show-tick" data-width="90%"
+                            id="one-toad-selection" title="Select one toad"
+                            data-style="btn-outline-info">
+                        <option selected>Atlas</option>
+                        <option>Fortuna</option>
+                        <option>Gelos</option>
+                        <option>Zeus</option>
+                        <option>Talos</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="col-12 text-center" id="multiple-toad-option"
+                 style="padding-top: 10px; display: block">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Select multiple toads:</em>
+                </h5>
+                <hr>
+                <label style="width: 100%">
+                    <select class="selectpicker show-tick" data-width="90%"
+                            data-style="btn-outline-info" multiple
+                            id="multiple-toad-selection"
+                            data-selected-text-format="count > 3"
+                            data-actions-box="true"
+                            title="Select multiple toads">
+                        <option selected>Atlas</option>
+                        <option selected>Fortuna</option>
+                        <option selected>Gelos</option>
+                        <option selected>Zeus</option>
+                        <option selected>Talos</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <!-- Toggle that controls visualization related options. -->
+        <div class="row" style="padding-top: 30px">
+            <h5 class="text-left" style="width: 90%; margin: auto">
+                <i class="fas fa-angle-double-down" aria-expanded="false"
+                   data-toggle="collapse" data-target="#vis-option"></i>
+                <em> Visualization Options:</em>
+            </h5>
+            <hr style="width: 90%">
+        </div>
+
+        <!-- Visualization related options. -->
+        <div id="vis-option" class="row collapse show">
+            <div class="col-12 text-center" style="padding-top: 10px">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Choose visualization method:</em>
+                </h5>
+                <hr>
+                <label style="width: 100%">
+                    <select class="selectpicker show-tick" id="vis-selection"
+                            data-width="90%" data-style="btn-info"
+                            title="Choose Visualization Method">
+                        <option selected>Parallel Coordinates</option>
+                        <option disabled>Scatter Plot</option>
+                        <option disabled>Radar Plot</option>
+                        <option disabled>Clustering</option>
+                        <option disabled>Regression</option>
+                        <option disabled>Animation</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="col-12 text-center" style="padding-top: 10px">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Choose phase of interest:</em>
+                </h5>
+                <hr>
+                <label style="width: 100%">
+                    <select class="selectpicker show-tick" data-width="90%"
+                            id="phase-selection" data-style="btn-info"
+                            title="Select multiple toads">
+                        <option selected>Initiation</option>
+                        <option>Forelimb LO</option>
+                        <option>Impact Prep</option>
+                        <option>Landing</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="col-12 text-center" id="variable-display"
+                 style="padding-top: 10px">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Choose variables of interest:</em>
+                </h5>
+                <hr>
+                <label style="width: 100%">
+                    <select class="selectpicker" id="variable"
+                            title="Choose Variables" data-width="90%"
+                            data-style="btn-info" data-actions-box="true"
+                            data-selected-text-format="count > 3"
+                            data-live-search="true" multiple>
+                        <option selected>Hop Duration</option>
+                        <option selected>Mean Elb</option>
+                        <option selected>Mean Pro/Ret</option>
+                        <option selected>Phase Duration</option>
+                        <option selected>Mean Elev/Dep</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-12 text-center" style="padding-top: 30px">
+                <button type="button" id="get-graph" class="btn btn-primary"
+                        style="width: 90%">Get Graph!
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-9 text-center" style="background-color: aliceblue">
+        <i id="spinner" class="fas fa-4x fa-spinner fa-spin"
+           style="display: none; margin-top: 350px"></i>
+        <div id="vis-holder"></div>
+        <div class="col-12"><div id="color-toad" class="row"></div></div>
+    </div>
+</div>
+</body>
+
+<footer class="row" style="background-color: #52BE80">
+    <div class="col-3 text-center"
+         style="display: flex; justify-content: center; align-items: center">
+        &#9400; 2019 LilyPADz
+    </div>
+    <div class="col-6 text-center"></div>
+    <div class="col-3 text-center"
+         style="display: flex; justify-content: center; align-items: center">
+        <script>document.write(`last modified: ${document.lastModified}`)
+        </script>
+    </div>
+</footer>
+
+</html>
