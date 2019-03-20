@@ -128,8 +128,6 @@ function displayInstruction () {
  * Do the ajax call to upload file.
  */
 function upload () {
-  const fileName = $('input[type=file]').val().split('\\').pop()
-  console.log(fileName)
   $.ajax({
     type: 'POST',
     cache: false,
@@ -201,5 +199,22 @@ $(function () {
   // Instruction alert button.
   $('#instruction').click(() => {
     displayInstruction()
+  })
+
+  $('#vis-selection').change(() => {
+    const visSelection = $('#vis-selection').val()
+    if (visSelection === "Small Series") {
+      $('#small-series-display').css("display", "block");
+      $('#clustering-display').css("display", "none");
+      $('#regression-display').css("display", "none");
+    } else if (visSelection === "Clustering") {
+      $('#small-series-display').css("display", "none");
+      $('#clustering-display').css("display", "block");
+      $('#regression-display').css("display", "none");
+    } else {
+      $('#small-series-display').css("display", "none");
+      $('#clustering-display').css("display", "none");
+      $('#regression-display').css("display", "block");
+    }
   })
 })
