@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Set the character set.-->
+    <!-- Set the character set. -->
     <meta charset="UTF-8">
-    <!-- Set the page title.-->
+    <!-- Set the page title. -->
     <title>LilyPADz</title>
     <!-- Include style sheets; bootstrap, select, toggle, project style. -->
     <link rel="stylesheet"
@@ -19,24 +19,33 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Skranji">
     <link rel='shortcut icon' type='image/x-icon'
-          href='../static/favicon.png'/>
-    <link rel="stylesheet" href="../static/css/style.css">
+          href="{{ url_for("static", filename="favicon.png") }}">
+    <link rel="stylesheet"
+          href="{{ url_for("static", filename="css/style.css") }}">
 
     <!-- Include javascript; jQuery, plotly, bootstrap, select, toggle, project JS. -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="../static/js/index.js"></script>
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script type="text/javascript"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript"
+            src="{{ url_for("static", filename="js/index.js") }}"></script>
 </head>
 
 <!-- Define the header of the page. -->
 <header class="row">
-    <img id="header-img" class="col-3 text-center"
-         src="../static/image/toad.png" alt="Toadyboi">
+    <img id="header-img" class="col-3 text-center" alt="Toadyboi"
+         src="{{ url_for("static", filename="image/toad.png") }}">
     <div class="col-6">
         <div class="row">
             <div class="col-12 text-center" style="padding-top: 5px">
@@ -271,15 +280,9 @@
 </body>
 
 <footer class="row" style="background-color: #52BE80">
-    <div class="col-3 text-center"
+    <div class="col-12 text-center"
          style="display: flex; justify-content: center; align-items: center">
         &#9400; 2019 LilyPADz
-    </div>
-    <div class="col-6 text-center"></div>
-    <div class="col-3 text-center"
-         style="display: flex; justify-content: center; align-items: center">
-        <script>document.write(`last modified: ${document.lastModified}`)
-        </script>
     </div>
 </footer>
 
