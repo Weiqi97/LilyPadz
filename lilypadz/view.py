@@ -1,5 +1,7 @@
 from flask import request, render_template, Flask
 
+from lilypadz.model.data_reader import get_one_hop
+
 app = Flask(
     __name__,
     static_folder="static",
@@ -16,6 +18,7 @@ def index():
 
 @app.route("/get_graph", methods=["POST"])
 def get_graph():
+    temp = get_one_hop(name="Atlas", hop=5)
     return "Works!"
 
 

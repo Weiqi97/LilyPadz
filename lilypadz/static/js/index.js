@@ -61,7 +61,7 @@ function getGraph() {
 
 	// Do an ajax call to get the graph.
 	$.ajax({
-		url: `/lilypadz/get_graph`,
+		url: `/get_graph`,
 		type: "POST",
 		data: {"data": "data"},
 		contentType: "application/json; charset=utf-8"
