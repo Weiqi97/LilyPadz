@@ -1,3 +1,1 @@
 # LilyPadz
-
-I'm Weiqi
