@@ -61,7 +61,7 @@ function getGraph() {
 
 	// Do an ajax call to get the graph.
 	$.ajax({
-		url: `/get_graph`,
+		url: "/small_series",
 		type: "POST",
 		data: {"data": "data"},
 		contentType: "application/json; charset=utf-8"
@@ -127,7 +127,7 @@ function upload() {
 	$.ajax({
 		type: "POST",
 		cache: false,
-		url: "/lilypadz/upload",
+		url: "/upload",
 		contentType: false,
 		processData: false,
 		data: new FormData($("#upload")[0])

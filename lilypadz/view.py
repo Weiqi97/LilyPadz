@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+from lilypadz.model.small_series import get_small_series
 
 # Set up the flask app with desired parameters.
 app = Flask(
@@ -15,9 +16,9 @@ def index():
     )
 
 
-@app.route("/get_graph", methods=["POST"])
-def get_graph():
-    return "Works!"
+@app.route("/small_series", methods=["POST"])
+def small_series():
+    return get_small_series()
 
 
 @app.route('/upload', methods=['POST'])

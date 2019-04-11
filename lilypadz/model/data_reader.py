@@ -2,7 +2,6 @@
 
 import pandas as pd
 from typing import Dict, List, NamedTuple
-
 from lilypadz.helper.constant import TOAD_HOP
 
 
