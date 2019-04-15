@@ -39,6 +39,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3]
+    processed_fp_data = processed_fp_data.div(processed_fp_data.loc[0])
     processed_fp_data.columns = ["Fore-Aft", "Lateral", "Normal"]
     processed_fp_data = processed_fp_data.reset_index(drop=True)
 
