@@ -59,8 +59,8 @@ function getOption() {
  */
 function getGraph() {
 	// Clear the boxed before rendering new element.
-	$("#vis-holder").html("")
-	$("#color-toad").html("")
+	$("#vis-holder-one").html("")
+	$("#vis-holder-two").html("")
 
 	// Display a spinner to indicate users that element are being loaded.
 	$("#spinner").css("display", "block")

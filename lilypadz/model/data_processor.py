@@ -27,7 +27,9 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     # Process the data.
     processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna()
     processed_kinematic.columns = [
-        'Elbow_Flex_Ext', 'Humeral_Pro_Ret', 'Humeral_Dep_Ele'
+        "Elbow flexion/extension",
+        "Humeral protraction/retraction",
+        "Humeral depression/elevation"
     ]
     processed_kinematic = processed_kinematic.reset_index(drop=True)
 
@@ -36,7 +38,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3]
-    processed_fp_data.columns = ['fore-aft', 'lateral', 'normal']
+    processed_fp_data.columns = ["Fore-Aft", "Lateral", "Normal"]
     processed_fp_data = processed_fp_data.reset_index(drop=True)
 
     return ProcessedHop(

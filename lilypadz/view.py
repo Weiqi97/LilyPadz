@@ -18,7 +18,11 @@ def index():
 
 @app.route("/small_series", methods=["POST"])
 def small_series():
-    return get_small_series_for_one_toad(name="Atlas")
+    options = request.json
+    return get_small_series_for_one_toad(
+        name=options["toad_selection"],
+        variable=options["small_series_variable"].split("!")
+    )
 
 
 @app.route('/upload', methods=['POST'])

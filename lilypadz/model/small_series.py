@@ -1,4 +1,5 @@
 import colorlover
+from typing import List
 import plotly.graph_objs as go
 from flask import jsonify
 from plotly.offline import plot
@@ -6,7 +7,7 @@ from plotly.tools import make_subplots
 from lilypadz.model.data_processor import get_toad_processed_hop
 
 
-def get_small_series_for_one_toad(name: str):
+def get_small_series_for_one_toad(name: str, variable: List[str]):
     """
 
     :param name:
@@ -19,11 +20,14 @@ def get_small_series_for_one_toad(name: str):
     color = colorlover.scales["12"]["qual"]["Paired"]
 
     # Get the force plate column names.
-    fp_column_name = ["fore-aft", "lateral", "normal"]
+    fp_column_name = list(
+        {"Fore-Aft", "Lateral", "Normal"}.intersection(variable)
+    )
 
     # Create the subplot for force plate plot.
     fp_plot = make_subplots(
-        rows=3, cols=1, shared_xaxes=True, subplot_titles=fp_column_name
+        rows=len(fp_column_name), cols=1,
+        shared_xaxes=True, subplot_titles=fp_column_name
     )
 
     # Iterate over processed data for each hop.
@@ -47,17 +51,20 @@ def get_small_series_for_one_toad(name: str):
 
     # Adjust the settings of the plot.
     fp_plot["layout"].update(
-        height=400, margin={'l': 40, 'r': 40, 'b': 30, 't': 40}
+        height=400, margin={"l": 40, "r": 40, "b": 30, "t": 40}
     )
 
     # Get the kinematic column names.
-    kinematic_column_name = [
-        "Elbow_Flex_Ext", "Humeral_Pro_Ret", "Humeral_Dep_Ele"
-    ]
+    kinematic_column_name = list({
+        "Elbow flexion/extension",
+        "Humeral protraction/retraction",
+        "Humeral depression/elevation"
+    }.intersection(variable))
 
     # Create the subplot for force plate plot.
     kinematic_plot = make_subplots(
-        rows=3, cols=1, shared_xaxes=True, subplot_titles=kinematic_column_name
+        rows=len(kinematic_column_name), cols=1,
+        shared_xaxes=True, subplot_titles=kinematic_column_name
     )
 
     # Iterate over processed data for each hop.
