@@ -1,89 +1,100 @@
-import numpy as np
-import pandas as pd
-from plotly import tools
+import colorlover
+import plotly.graph_objs as go
+from flask import jsonify
 from plotly.offline import plot
-from lilypadz.helper.constant import TOAD_HOP
+from plotly.tools import make_subplots
+from lilypadz.model.data_processor import get_toad_processed_hop
 
 
-def get_small_series():
-    """Draw visualization"""
-    """Draw visualization"""
-    # create arrays for each variables
+def get_small_series_for_one_toad(name: str):
+    """
 
-    EFE_array = []
-    HPR_array = []
-    HDE_array = []
-    FA_array = []
-    LA_array = []
-    NO_array = []
+    :param name:
+    :return:
+    """
+    # Get the processed hop data.
+    all_processed_hop = get_toad_processed_hop(name=name)
 
-    # only choose atlas for now
-    toad = 'Atlas'
+    # Set the global color to use.
+    color = colorlover.scales["12"]["qual"]["Paired"]
 
-    # store all hops and length of each hop into an array
-    hop_array = []
-    length = []
-    for hop in TOAD_HOP['Atlas']:
-        toad_hop = pd.read_csv(f"lilypadz/data/{toad}/{hop}/frog_data.csv")
-        if (toad_hop.shape[0] > 20):
-            length.append(toad_hop.shape[0])
-            hop_array.append(toad_hop)
+    # Get the force plate column names.
+    fp_column_name = ["fore-aft", "lateral", "normal"]
 
-    # find the minimum length among all hop length
-    min_length = min(length)
+    # Create the subplot for force plate plot.
+    fp_plot = make_subplots(
+        rows=3, cols=1, shared_xaxes=True, subplot_titles=fp_column_name
+    )
 
-    # align the hop into same length and store in each variable
-    for hop in hop_array:
-        EFE_array.append(np.array(hop["Elbow_Flex_Ext"])[:min_length])
-        HPR_array.append(np.array(hop["Humeral_Pro_Ret"])[:min_length])
-        HDE_array.append(np.array(hop["Humeral_Dep_Ele"])[:min_length])
-        FA_array.append(np.array(hop["fore-aft"])[:min_length])
-        LA_array.append(np.array(hop["lateral"])[:min_length])
-        NO_array.append(np.array(hop["normal"])[:min_length])
+    # Iterate over processed data for each hop.
+    for index, (toad_hop, hop_data) in enumerate(all_processed_hop.items()):
+        # Iterate over each column within the hop data.
+        for col_index, col_name in enumerate(fp_column_name):
+            # Append trace to the subplot.
+            fp_plot.append_trace(
+                col=1, row=col_index + 1,
+                trace=go.Scatter(
+                    x=hop_data.force_plate.index,
+                    y=hop_data.force_plate[col_name],
+                    mode='lines',
+                    name=toad_hop,
+                    legendgroup=toad_hop,
+                    line=dict(color=color[index % len(color)]),
+                    # Show the legend only for first trace.
+                    showlegend=True if col_index == 0 else False
+                )
+            )
 
-    var_array = [np.array(EFE_array), np.array(HPR_array), np.array(HDE_array),
-                 np.array(FA_array), np.array(LA_array), np.array(NO_array)]
+    # Adjust the settings of the plot.
+    fp_plot["layout"].update(
+        height=400, margin={'l': 40, 'r': 40, 'b': 30, 't': 40}
+    )
 
-    # build dataframe for each variables (Krissa, you may want to  change the column name into something easy for the vis label)
-    var_df = []
-    for var in var_array:
-        df = pd.DataFrame(np.column_stack(var),
-                          columns=[x for x in range(len(var))])
-        var_df.append(df)
+    # Get the kinematic column names.
+    kinematic_column_name = [
+        "Elbow_Flex_Ext", "Humeral_Pro_Ret", "Humeral_Dep_Ele"
+    ]
 
-    # draw visualization
-    fig = tools.make_subplots(rows=6, cols=1, shared_xaxes=True,
-                              subplot_titles=(
-                                  'Elbow_Flex_Ext', 'Humeral_Pro_Ret',
-                                  'Humeral_Dep_Ele', 'fore-aft', 'lateral',
-                                  'normal'))
-    fig_row = 1
-    for df in var_df:
-        if (fig_row == 1):
-            legend_display = True
-        else:
-            legend_display = False
+    # Create the subplot for force plate plot.
+    kinematic_plot = make_subplots(
+        rows=3, cols=1, shared_xaxes=True, subplot_titles=kinematic_column_name
+    )
 
-        for col in df.columns:
-            fig.append_trace(
-                {'x': df.index, 'y': df[col], 'type': 'scatter', 'name': col,
-                 'legendgroup': col, 'showlegend': legend_display}, fig_row, 1)
-        fig_row += 1
+    # Iterate over processed data for each hop.
+    for index, (toad_hop, hop_data) in enumerate(all_processed_hop.items()):
+        # Iterate over each column within the hop data.
+        for col_index, col_name in enumerate(kinematic_column_name):
+            # Append trace to the subplot.
+            kinematic_plot.append_trace(
+                col=1, row=col_index + 1,
+                trace=go.Scatter(
+                    x=hop_data.kinematic.index,
+                    y=hop_data.kinematic[col_name],
+                    mode='lines',
+                    name=toad_hop,
+                    legendgroup=toad_hop,
+                    line=dict(color=color[index % len(color)]),
+                    # Show the legend only for first trace.
+                    showlegend=True if col_index == 0 else False
+                )
+            )
 
-    fig['layout'].update(height=820)
-    fig['layout']['xaxis'].update(title='time(ms)',
-                                  tickmode='linear',
-                                  ticks='outside',
-                                  tick0=0,
-                                  dtick=1,
-                                  ticklen=4,
-                                  tickwidth=2,
-                                  tickcolor='#000'
-                                  )
+    # Adjust the settings of the plot.
+    kinematic_plot["layout"].update(
+        height=400, margin={'l': 40, 'r': 40, 'b': 30, 't': 40}
+    )
 
-    return plot(
-        fig,
-        show_link=False,
-        output_type="div",
-        include_plotlyjs=False
+    return jsonify(
+        fp_plot=plot(
+            fp_plot,
+            show_link=False,
+            output_type="div",
+            include_plotlyjs=False
+        ),
+        kinematic_plot=plot(
+            kinematic_plot,
+            show_link=False,
+            output_type="div",
+            include_plotlyjs=False
+        )
     )

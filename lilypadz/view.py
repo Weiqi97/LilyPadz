@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from lilypadz.model.small_series import get_small_series
+from lilypadz.model.small_series import get_small_series_for_one_toad
 
 # Set up the flask app with desired parameters.
 app = Flask(
@@ -18,7 +18,7 @@ def index():
 
 @app.route("/small_series", methods=["POST"])
 def small_series():
-    return get_small_series()
+    return get_small_series_for_one_toad(name="Atlas")
 
 
 @app.route('/upload', methods=['POST'])

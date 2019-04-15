@@ -25,26 +25,32 @@ function toggleToadSelection() {
  */
 function getOption() {
 	// Get the toad selected.
-	let toadSelection
+	let toad
 	if (getToggleStatus()) {
-		toadSelection = Array.prototype.join.call(
+		toad = Array.prototype.join.call(
 			$("#multiple-toad-selection").val(), "!"
 		)
 	} else {
-		toadSelection = $("#one-toad-selection").val()
+		toad = $("#one-toad-selection").val()
 	}
 
 	// Get the visualization method selected.
-	const visSelection = $("#vis-selection").val()
+	const visMethod = $("#vis-selection").val()
 
 	// Get variables selected.
-	const variableSelection = $("#variable").val()
+	const smallSeriesVar = $("#small-series-variable").val()
+	const clusteringVar = $("#clustering-variable").val()
+	const regressionXVar = $("#regression-x-variable").val()
+	const regressionYVar = $("#regression-y-variable").val()
 
 	// Return the JSON string.
 	return JSON.stringify({
-		variable_selection: Array.prototype.join.call(variableSelection, "!"),
-		toad_selection: toadSelection,
-		vis_selection: visSelection
+		small_series_variable: Array.prototype.join.call(smallSeriesVar, "!"),
+		clustering_variable: Array.prototype.join.call(clusteringVar, "!"),
+		regression_x_variable: regressionXVar,
+		regression_y_variable: regressionYVar,
+		toad_selection: toad,
+		vis_selection: visMethod
 	})
 }
 
@@ -63,12 +69,13 @@ function getGraph() {
 	$.ajax({
 		url: "/small_series",
 		type: "POST",
-		data: {"data": "data"},
+		data: getOption(),
 		contentType: "application/json; charset=utf-8"
 	})
 		.done(function (result) {
 			// Put the result in to the proper html div.
-			$("#vis-holder").html(result)
+			$("#vis-holder-one").html(result['fp_plot'])
+			$("#vis-holder-two").html(result['kinematic_plot'])
 		})
 		.fail(
 			// When ajax has error, print in the console.
