@@ -31,6 +31,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         "Humeral protraction/retraction",
         "Humeral depression/elevation"
     ]
+    processed_kinematic = processed_kinematic.iloc[::-1]
     processed_kinematic = processed_kinematic.reset_index(drop=True)
 
     # Extract the force plate data.
