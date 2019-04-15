@@ -6,7 +6,7 @@ LilyPADz is a student-led software development project devoted to understanding 
 
 ### The Software
 
-The software application is built with a flask microframework. The backend is written in Python and utilizes the Pandas Dataframes library while the frontend is written in HTML5, CSS, and JavaScript. It was created to help a Wheaton College biology professor summarize her research and draw conclusions about the data she collected.
+The software application is built with a flask micro-framework. The backend is written in Python and utilizes the Pandas library while the frontend is written in HTML5, CSS, and JavaScript. It was created to help a Wheaton College biology professor summarize her research and draw conclusions about the data she collected.
 
 ### Getting Started
 
