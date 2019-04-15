@@ -8,10 +8,11 @@ from lilypadz.model.data_processor import get_toad_processed_hop
 
 
 def get_small_series_for_one_toad(name: str, variable: List[str]):
-    """
+    """Get small series plot for one specific toad.
 
-    :param name:
-    :return:
+    :param name: The name of the desired toad.
+    :param variable: Variable of interest.
+    :return: Two plots, the kinematic and force plate small series.
     """
     # Get the processed hop data.
     all_processed_hop = get_toad_processed_hop(name=name)
