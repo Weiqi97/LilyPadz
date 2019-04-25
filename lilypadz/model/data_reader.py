@@ -11,7 +11,7 @@ class HopData(NamedTuple):
     xyz: pd.DataFrame
     angle: pd.DataFrame
     force: pd.DataFrame
-
+    time: pd.DataFrame
 
 def get_one_hop(name: str, hop: int) -> HopData:
     """Get data for one hop of a specific toad.
@@ -29,8 +29,11 @@ def get_one_hop(name: str, hop: int) -> HopData:
     # Read in the force plate data.
     force_frame = pd.read_csv(f"lilypadz/data/{name}/{hop}/force.csv")
 
+    # Read in the time data.
+    time_frame = pd.read_csv(f"lilypadz/data/{name}/time.csv")
+
     # Pack all information and return the NamedTuple.
-    return HopData(xyz=xyz_frame, angle=angle_frame, force=force_frame)
+    return HopData(xyz=xyz_frame, angle=angle_frame, force=force_frame, time=time_frame)
 
 
 def get_toad_hop(name: str, hops: List[int]) -> Dict[str, HopData]:

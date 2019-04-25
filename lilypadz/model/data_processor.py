@@ -9,7 +9,9 @@ class ProcessedHop(NamedTuple):
 
     kinematic: pd.DataFrame
     force_plate: pd.DataFrame
-
+    onset_time: float
+    first_touch: float
+    recovery_time: float
 
 def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     """Get processed data for one hop of a specific toad.
@@ -20,6 +22,11 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     """
     # Get the hop data from the desired toad.
     hop_data = get_one_hop(name=name, hop=hop)
+
+    # Extract the time data
+    onset = hop_data.time["Onset"]
+    first_touch = hop_data.time["First Touch"]
+    recovery = hop_data.time["Recovery"]
 
     # Extract the kinematic data.
     hop_kinematic_data = hop_data.angle
@@ -39,13 +46,16 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3]
-    processed_fp_data = processed_fp_data.div(processed_fp_data.loc[0])
+    #Aprocessed_fp_data = processed_fp_data.div(processed_fp_data.loc[0])
     processed_fp_data.columns = ["Fore-Aft", "Lateral", "Normal"]
     processed_fp_data = processed_fp_data.reset_index(drop=True)
 
     return ProcessedHop(
         kinematic=processed_kinematic,
-        force_plate=processed_fp_data
+        force_plate=processed_fp_data,
+        onset_time=onset,
+        first_touch=first_touch,
+        recovery_time=recovery
     )
 
 
