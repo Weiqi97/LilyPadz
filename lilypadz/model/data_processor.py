@@ -25,9 +25,9 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     hop_data = get_one_hop(name=name, hop=hop)
 
     # Extract the time data
-    onset = hop_data.time["Onset"]
-    first_touch = hop_data.time["First Touch"]
-    recovery = hop_data.time["Recovery"]
+    onset = hop_data.time.iloc[hop, 1]
+    first_touch = hop_data.time.iloc[hop, 2]
+    recovery = hop_data.time.iloc[hop,3]
 
     # Round the time data 
     first_touch = round(first_touch) 
@@ -93,7 +93,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         index = index + 1
 
     # Select data from landing to recovery
-    fp_data = fp_data.loc[fp_start:]
+    hop_fp_data = hop_fp_data.loc[fp_start:]
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3] #only want 1st 3 columns
