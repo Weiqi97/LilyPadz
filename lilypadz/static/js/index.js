@@ -128,6 +128,42 @@ function displayInstruction() {
 }
 
 /**
+ * Display the Plotly Instruction pop up.
+ */
+function displayPlotlyInstruction() {
+	// Setup the instruction message we want to display.
+	const instruction = `Upon hovering over the top right corner of the plot, you will see several
+	clickable icons which will help you better understand the visualization. Looking at the icons from
+	the left to the right, the first icon is a camera which allows you to download the plot to your computer
+	as a png. The next icon allows you to zoom in on a certain area of the plot by dragging the cursor across
+	the specific portion of data that you wish to view in greater detail. The pan icon allows you to drag the
+	plot data both vertically and horizontally to view specific areas of the plot and is especially useful after
+	using the zoom in or zoom out icons. In order to return to the original plot view, simply double click anywhere on
+	the plot. The autoscale button zooms in on the plot in order to create an optimal view of the data but it does not
+	account for the range of the axes. On the other hand, the reset axes button includes the axes range if it was previously
+	determined by the user. If the axes range was not previously determined, an optimal view of all of the data in the plot
+	is displayed instead. The toggle spike lines button generates a horizontal and vertical line that spans across the data
+	at the point where the cursor is located. This feature allows you to identify the relationship between the different
+	variables in the multivariate dataset. Click on the toggle spike lines button again to hide these lines. Lastly, the show
+	closest data on hover displays the data at a single point where the cursor is located. The compare data on hover button
+	shows the data for all points that share the same x-value according to the cursor's location.` 
+
+	// Display the message with a jQuery Confirm window.
+	$.confirm({
+		type: "blue",
+		title: "Plotly Instructions",
+		content: instruction,
+		columnClass: "col-10",
+		buttons: {
+			confirm: {
+				text: "Got it!",
+				btnClass: "btn-info"
+			}
+		}
+	})
+}
+
+/**
  * Do the ajax call to upload file.
  */
 function upload() {
@@ -202,6 +238,11 @@ $(function () {
 	// Instruction alert button.
 	$("#instruction").click(() => {
 		displayInstruction()
+	})
+	
+	//Plotly Instruction alert button.
+	$("#plotly").click(() => {
+		displayPlotlyInstruction()
 	})
 
 	$("#vis-selection").change(() => {
