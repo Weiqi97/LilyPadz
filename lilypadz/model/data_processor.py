@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import math
 from typing import NamedTuple, Dict
 from sklearn import preprocessing
@@ -14,6 +15,7 @@ class ProcessedHop(NamedTuple):
     onset_time: float
     first_touch: float
     recovery_time: float
+    sight: str
 
 def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     """Get processed data for one hop of a specific toad.
@@ -22,8 +24,21 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     :param hop: The hop number of interest.
     :return: Desired kinematic and force plate data.
     """
+    
+
     # Get the hop data from the desired toad.
     hop_data = get_one_hop(name=name, hop=hop)
+
+    # Get sighted or blinded
+    all_hop_info = hop_data.all_hop_info
+    hop_list = np.array(all_hop_info[all_hop_info['ID'] == 'Atlas']['Hop Number'])
+    if hop in hop_list:
+        sightedness = all_hop_info[(all_hop_info['ID'] == name) & 
+        (all_hop_info['Hop Number'] == hop) & 
+        (all_hop_info['Hop Phase'] == 'Landing')]['Sight']
+        sighted = sightedness.iloc[0]
+    else:
+        sighted = 'unknown'
 
     # Extract the time data
     onset = hop_data.time.iloc[hop, 1]
@@ -114,9 +129,9 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         force_plate=processed_fp_data,
         onset_time=onset,
         first_touch=first_touch,
-        recovery_time=recovery
+        recovery_time=recovery,
+        sight=sighted
     )
-
 
 def get_toad_processed_hop(name: str) -> Dict[str, ProcessedHop]:
     """Get all processed hop data from one specific toad.
@@ -127,4 +142,16 @@ def get_toad_processed_hop(name: str) -> Dict[str, ProcessedHop]:
     return {
         f"{name} hop {hop}": get_one_processed_hop(name=name, hop=hop)
         for hop in TOAD_HOP[name]
+    }
+
+
+def get_all_processed_hop() -> Dict[str, Dict[str, ProcessedHop]]:
+    """Get all processed hop data from all toads.
+
+    :param name: NA
+    :return：A dictionary of a dictionary 
+    """
+    return {
+        toad: get_toad_processed_hop(name=toad)
+        for toad in TOAD_HOP
     }
