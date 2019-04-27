@@ -3,6 +3,11 @@ from lilypadz.model.data_processor import get_all_processed_hop
 import pandas as pd 
 
 def get_df_for_clustering():
+    """Get clustering plot.
+
+    :param: NA.
+    :return: clustering plot.
+    """
     All_processed_hop = get_all_processed_hop()
     cluster_df = pd.DataFrame(columns=["Mean elbow flex/ext",
     "Mean humeral protr/retr", "Mean humeral depr/ele",
