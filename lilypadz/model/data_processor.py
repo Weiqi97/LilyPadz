@@ -1,6 +1,7 @@
 import pandas as pd
 import math
 from typing import NamedTuple, Dict
+from sklearn import preprocessing
 from lilypadz.helper.constant import TOAD_HOP
 from lilypadz.model.data_reader import get_one_hop
 
@@ -59,11 +60,15 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
 
     # Process the data.
     processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna() #all rows, all columns from 2nd column & remove NaNs
-    processed_kinematic.columns = [
-        "Elbow flexion/extension",
-        "Humeral protraction/retraction",
-        "Humeral depression/elevation"
-    ]
+
+    # normalize each column in kinematic data
+    scaler = preprocessing.StandardScaler()
+    if(processed_kinematic.shape[0] != 0):
+        scaled_kinematic_data = scaler.fit_transform(processed_kinematic)
+        processed_kinematic = pd.DataFrame(scaled_kinematic_data)
+        
+    processed_kinematic.columns=["Elbow flexion/extension",
+    "Humeral protraction/retraction", "Humeral depression/elevation"]
     processed_kinematic = processed_kinematic.reset_index(drop=True)
 
     # Extract the force plate data.
@@ -93,12 +98,15 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         index = index + 1
 
     # Select data from landing to recovery
-    hop_fp_data = hop_fp_data.loc[fp_start:]
+    hop_fp_data = hop_fp_data.loc[fp_start-100:fp_start+100]
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3] #only want 1st 3 columns
-    #Aprocessed_fp_data = processed_fp_data.div(processed_fp_data.loc[0])
-    processed_fp_data.columns = ["Fore-Aft", "Lateral", "Normal"]
+
+    # normalize each column in fp data
+    scaler = preprocessing.StandardScaler()
+    scaled_fp_data = scaler.fit_transform(processed_fp_data)
+    processed_fp_data = pd.DataFrame(scaled_fp_data, columns=["Fore-Aft", "Lateral", "Normal"])
     processed_fp_data = processed_fp_data.reset_index(drop=True)
 
     return ProcessedHop(
