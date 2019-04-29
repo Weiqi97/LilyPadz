@@ -12,9 +12,6 @@ class ProcessedHop(NamedTuple):
 
     kinematic: pd.DataFrame
     force_plate: pd.DataFrame
-    onset_time: float
-    first_touch: float
-    recovery_time: float
     sight: str
 
 def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
@@ -31,7 +28,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
 
     # Get sighted or blinded
     all_hop_info = hop_data.all_hop_info
-    hop_list = np.array(all_hop_info[all_hop_info['ID'] == 'Atlas']['Hop Number'])
+    hop_list = np.array(all_hop_info[all_hop_info['ID'] == name]['Hop Number'])
     if hop in hop_list:
         sightedness = all_hop_info[(all_hop_info['ID'] == name) & 
         (all_hop_info['Hop Number'] == hop) & 
@@ -41,9 +38,10 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         sighted = 'unknown'
 
     # Extract the time data
-    onset = hop_data.time.iloc[hop, 1]
-    first_touch = hop_data.time.iloc[hop, 2]
-    recovery = hop_data.time.iloc[hop,3]
+    time = hop_data.time
+    onset = time.loc[time['Hop']==hop]['Onset'].iloc[0]
+    first_touch = time.loc[time['Hop']==hop]['First Touch'].iloc[0]
+    recovery = time.loc[time['Hop']==hop]['Recovery'].iloc[0]
 
     # Round the time data 
     first_touch = round(first_touch) 
@@ -64,14 +62,14 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     # Select data from landing to recovery
     hop_kinematic_data = hop_kinematic_data.loc[kinematic_start-1:kinematic_end-1] 
 
-    """
-    #find whether the frog is blinded or sighted (finds the first row to match this criteria)
-    hop_row = all_hopping_data.loc[(all_hopping_data['ID']==frogName) & (all_hopping_data['Hop Number'] == hopNum)].index[0]
-    sighted_blinded = all_hopping_data.loc[hop_row,'Sight']
+    # """
+    # #find whether the frog is blinded or sighted (finds the first row to match this criteria)
+    # hop_row = all_hopping_data.loc[(all_hopping_data['ID']==frogName) & (all_hopping_data['Hop Number'] == hopNum)].index[0]
+    # sighted_blinded = all_hopping_data.loc[hop_row,'Sight']
 
-    # add attribute to tell whether frog is blind/sighted
-    hop_kinematic_data.sighted = sighted_blinded
-    """
+    # # add attribute to tell whether frog is blind/sighted
+    # hop_kinematic_data.sighted = sighted_blinded
+    # """
 
     # Process the data.
     processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna() #all rows, all columns from 2nd column & remove NaNs
@@ -85,6 +83,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     processed_kinematic.columns=["Elbow flexion/extension",
     "Humeral protraction/retraction", "Humeral depression/elevation"]
     processed_kinematic = processed_kinematic.reset_index(drop=True)
+
 
     # Extract the force plate data.
     hop_fp_data = hop_data.force
@@ -112,7 +111,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
                 
         index = index + 1
 
-    # Select data from landing to recovery
+    # # Select data from landing to recovery
     hop_fp_data = hop_fp_data.loc[fp_start-100:fp_start+100]
 
     # Process the data.
@@ -127,9 +126,6 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     return ProcessedHop(
         kinematic=processed_kinematic,
         force_plate=processed_fp_data,
-        onset_time=onset,
-        first_touch=first_touch,
-        recovery_time=recovery,
         sight=sighted
     )
 
