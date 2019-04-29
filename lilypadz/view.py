@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template
+
+from lilypadz.model.clustering import get_clustering_result
 from lilypadz.model.small_series import get_small_series_for_one_toad
-from lilypadz.model.clustering import get_df_for_clustering
+
 # Set up the flask app with desired parameters.
 app = Flask(
     __name__,
@@ -19,6 +21,7 @@ def index():
 @app.route("/small_series", methods=["POST"])
 def small_series():
     options = request.json
+    # get_clustering_result(n_clusters=2)
     return get_small_series_for_one_toad(
         name=options["toad_selection"],
         variable=options["small_series_variable"].split("!")
