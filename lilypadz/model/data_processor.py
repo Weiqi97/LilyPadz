@@ -97,17 +97,22 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         if ((normal_df.iloc[index] - normal_df.iloc[index-1]) > 0):
             #if we found it increases for one check if it increases for next 10!
             totalIncrease = 0
-            for i in range(1,10):
-                totalIncrease = totalIncrease + (normal_df.iloc[index+i] - normal_df.iloc[index+i-1])
-                if (totalIncrease > 1):
-                    increasing = True
-                else:
-                    increasing = False
-            if (increasing == True):
-                #WE FOUND WHERE FIRSTOUCH OF FP DATA IS (since this is where normal force starts going up)
-                fp_start = index
-                print("index",index)
-                index = nrows_fp #TO STOP THIS LOOP
+            if (index + 10 < nrows_fp):
+                for i in range(1,10):
+                    totalIncrease = totalIncrease + (normal_df.iloc[index+i] - normal_df.iloc[index+i-1])
+                    if (totalIncrease > 1):
+                        increasing = True
+                    else:
+                        increasing = False
+                if (increasing == True):
+                    #WE FOUND WHERE FIRSTOUCH OF FP DATA IS (since this is where normal force starts going up)
+                    fp_start = index
+                    print("index",index)
+                    index = nrows_fp #TO STOP THIS LOOP
+            else:
+                fp_start = 100
+        else:
+            fp_start = 100
                 
         index = index + 1
 
