@@ -1,4 +1,5 @@
 """This file holds the necessary constants for the project."""
+import colorlover
 
 # Toad name and their corresponding hop numbers.
 TOAD_HOP = {
@@ -21,4 +22,13 @@ TOAD_HOP = {
         1, 4, 5, 8, 11, 14, 16, 19, 20, 23, 28, 33, 35, 36, 38, 41, 42, 43, 44,
         45, 46, 47, 48, 49
     ]
+}
+
+# Toad name and their corresponding hop numbers.
+TOAD_COLOR = {
+    "Atlas": colorlover.interp(colorlover.scales["5"]["seq"]["Purples"], 7),
+    "Fortuna": colorlover.interp(colorlover.scales["5"]["seq"]["Blues"], 7),
+    "Gelos": colorlover.interp(colorlover.scales["5"]["seq"]["Oranges"], 7),
+    "Talos": colorlover.interp(colorlover.scales["5"]["seq"]["Greens"], 7),
+    "Zeus": colorlover.interp(colorlover.scales["5"]["seq"]["Reds"], 7)
 }

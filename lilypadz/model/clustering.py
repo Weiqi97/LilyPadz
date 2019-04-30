@@ -3,27 +3,26 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.offline import plot
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from lilypadz.model.data_processor import get_all_processed_hop, \
-    get_toad_processed_hop
+from sklearn.decomposition import PCA, SparsePCA
+from lilypadz.model.data_processor import get_all_processed_hop
 
 
 def get_data_for_clustering():
     """Find the DataFrame that contains all data from hops for clustering."""
-    # all_data = [
-    #     [f"{data_name} {data.sight}"] +
-    #     list(data.kinematic.mean(axis="index")) +
-    #     list(data.force_plate.mean(axis="index"))
-    #     for one_toad_hop in get_all_processed_hop().values()
-    #     for data_name, data in one_toad_hop.items()
-    # ]
-
     all_data = [
         [f"{data_name} {data.sight}"] +
         list(data.kinematic.mean(axis="index")) +
         list(data.force_plate.mean(axis="index"))
-        for data_name, data in get_toad_processed_hop(name="Atlas").items()
+        for one_toad_hop in get_all_processed_hop().values()
+        for data_name, data in one_toad_hop.items()
     ]
+
+    # all_data = [
+    #     [f"{data_name} {data.sight}"] +
+    #     list(data.kinematic.mean(axis="index")) +
+    #     list(data.force_plate.mean(axis="index"))
+    #     for data_name, data in get_toad_processed_hop(name="Atlas").items()
+    # ]
 
     return pd.DataFrame(
         index=[data[0] for data in all_data],
@@ -38,8 +37,13 @@ def get_clustering_result(n_clusters: int):
     """
     # Get kMeans analyze result and unpack it.
     data = get_data_for_clustering()
+    print(data.shape)
+    data = data.dropna(axis="index")
+    print(data.shape)
     k_means = KMeans(n_clusters=n_clusters)
-    reduced_data = PCA(n_components=2).fit_transform(data.dropna())
+    reduced_data = PCA(n_components=2).fit_transform(data)
+    print(reduced_data)
+    print(reduced_data[:, 0])
     k_means_index = k_means.fit_predict(reduced_data)
 
     # Get hop names.

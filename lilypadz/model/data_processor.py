@@ -53,7 +53,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         hop_kinematic_data.loc[kinematic_start - 1: kinematic_end - 1]
 
     # Process the data.
-    processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna()
+    processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna(axis="index")
 
     # Normalize each column in kinematic data
     scalar = preprocessing.StandardScaler()
@@ -66,8 +66,8 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
                                    "Humeral depression/elevation"]
     processed_kinematic = processed_kinematic.reset_index(drop=True)
 
-    if len(processed_kinematic.index) > 150:
-        processed_kinematic = processed_kinematic.iloc[:150]
+    if len(processed_kinematic.index) > 60:
+        processed_kinematic = processed_kinematic.iloc[:61]
 
     # Extract the force plate data.
     hop_fp_data = hop_data.force
@@ -107,7 +107,7 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
         index = index + 1
 
     # Select data from landing to recovery
-    hop_fp_data = hop_fp_data.loc[fp_start - 70: fp_start + 80]
+    hop_fp_data = hop_fp_data.loc[fp_start - 10: fp_start + 50]
 
     # Process the data.
     processed_fp_data = hop_fp_data.iloc[:, :3]  # only want 1st 3 columns

@@ -7,6 +7,14 @@ function getToggleStatus() {
 }
 
 /**
+ * Get the toad data toggle option status.
+ * @returns {Boolean} If toggle is no, return true and false otherwise.
+ */
+function getSightStatus() {
+	return $("#sight").prop("checked")
+}
+
+/**
  * Display proper toad selection button corresponding to the toggle status.
  */
 function toggleToadSelection() {
@@ -50,14 +58,15 @@ function getOption() {
 		regression_x_variable: regressionXVar,
 		regression_y_variable: regressionYVar,
 		toad_selection: toad,
-		vis_selection: visMethod
+		vis_selection: visMethod,
+		sight: getSightStatus()
 	})
 }
 
 /**
  * Use an ajax call to get the parallel coordinate.
  */
-function getGraph() {
+function getSmallSeries() {
 	// Clear the boxed before rendering new element.
 	$("#vis-holder-one").html("")
 	$("#vis-holder-two").html("")
@@ -221,11 +230,13 @@ function upload() {
  */
 $(function () {
 	// Save the toggle element.
-	const toggle = $("#mode-toggle")
+	const toggle_mode = $("#mode-toggle")
+	const toggle_sight = $("#sight")
 	// Set the toggle to on by default - compare toads.
-	toggle.bootstrapToggle("on")
+	toggle_mode.bootstrapToggle("on")
+	toggle_sight.bootstrapToggle("on")
 	// Bind the toggle with on change element.
-	toggle.change(() => {
+	toggle_mode.change(() => {
 		toggleToadSelection()
 	})
 
@@ -241,7 +252,29 @@ $(function () {
 
 	// Generate the graph.
 	$("#get-graph").click(() => {
-		getGraph()
+		if (getToggleStatus()) {
+			if ($("#multiple-toad-selection").val().length < 2) {
+				$.confirm({
+				type: "red",
+				icon: "fas fa-exclamation-triangle",
+				theme: "modern",
+				title: "Error!",
+				content: "Please select at least two toads to compare",
+				buttons: {
+					confirm: {
+						text: "Got it!",
+						btnClass: "btn-info"
+					}
+				}
+			})
+			} else {
+				getSmallSeries()
+			}
+
+		} else {
+			getSmallSeries()
+		}
+
 	})
 
 	// Instruction alert button.
@@ -249,7 +282,7 @@ $(function () {
 		displayInstruction()
 	})
 
-	//Plotly Instruction alert button.
+	// Plotly Instruction alert button.
 	$("#plotly").click(() => {
 		displayPlotlyInstruction()
 	})
@@ -260,14 +293,10 @@ $(function () {
 			$("#small-series-display").css("display", "block")
 			$("#clustering-display").css("display", "none")
 			$("#regression-display").css("display", "none")
-		} else if (visSelection === "Clustering") {
+		} else {
 			$("#small-series-display").css("display", "none")
 			$("#clustering-display").css("display", "block")
 			$("#regression-display").css("display", "none")
-		} else {
-			$("#small-series-display").css("display", "none")
-			$("#clustering-display").css("display", "none")
-			$("#regression-display").css("display", "block")
 		}
 	})
 })

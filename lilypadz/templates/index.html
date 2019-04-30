@@ -58,12 +58,20 @@
     </div>
     <div class="col-3"
          style="display: flex; justify-content: center; align-items: center">
-        <button type="button" id="instruction" class="btn btn-outline-primary">
-            Instructions
-        </button>
-        <button type="button" id="plotly" class="btn btn-outline-primary">
-            Plotly Instructions
-        </button>
+        <div class="row" style="width: 100%">
+            <div class="col-6 text-center">
+                <button type="button" id="instruction"
+                        class="btn btn-outline-primary">
+                    Instructions
+                </button>
+            </div>
+            <div class="col-6 text-center">
+                <button type="button" id="plotly"
+                        class="btn btn-outline-primary">
+                    Plotly Instructions
+                </button>
+            </div>
+        </div>
     </div>
 </header>
 
@@ -106,6 +114,19 @@
                        data-width="90%" data-height="40px"
                        data-on="<h5>Compare Toads</h5>"
                        data-off="<h5>Analyze One Toad</h5>">
+            </div>
+
+            <div class="col-12 text-center" style="padding-top: 10px">
+                <h5 class="text-left" style="width: 90%; margin: auto">
+                    <em>Distinguish hops by sight/blind:</em>
+                </h5>
+                <hr>
+                <label for="sight" style="display: none"></label>
+                <input data-toggle="toggle" id="sight" type="checkbox"
+                       data-onstyle="success" data-offstyle="primary"
+                       data-width="90%" data-height="40px"
+                       data-on="<h5>Distinguish sight/blind</h5>"
+                       data-off="<h5>Ignore sight/blind</h5>">
             </div>
 
             <div class="col-12 text-center" id="one-toad-option"
@@ -171,7 +192,6 @@
                             title="Choose Visualization Method">
                         <option selected>Small Series</option>
                         <option>Clustering</option>
-                        <option>Regression</option>
                     </select>
                 </label>
             </div>
@@ -233,51 +253,6 @@
                     </select>
                 </label>
             </div>
-
-            <div class="col-12 text-center" id="regression-display"
-                 style="padding-top: 10px; display: none">
-                <h5 class="text-left" style="width: 90%; margin: auto">
-                    <em>Choose predict value (x-axis):</em>
-                </h5>
-                <hr>
-                <label style="width: 100%">
-                    <select class="selectpicker" id="regression-x-variable"
-                            title="Choose Variables" data-width="90%"
-                            data-style="btn-info">
-                        <optgroup label="Kinematic Data">
-                            <option selected>Elbow flexion/extension</option>
-                            <option>Humeral protraction/retraction</option>
-                            <option>Humeral depression/elevation</option>
-                        </optgroup>
-                        <optgroup label="Force Plate Data">
-                            <option>Fore-Aft</option>
-                            <option>Lateral</option>
-                            <option>Normal</option>
-                        </optgroup>
-                    </select>
-                </label>
-                <h5 class="text-left" style="width: 90%; margin: auto">
-                    <em>Choose response value (y-axis):</em>
-                </h5>
-                <hr>
-                <label style="width: 100%">
-                    <select class="selectpicker" id="regression-y-variable"
-                            title="Choose Variables" data-width="90%"
-                            data-style="btn-info">
-                        <optgroup label="Kinematic Data">
-                            <option selected>Elbow flexion/extension</option>
-                            <option>Humeral protraction/retraction</option>
-                            <option>Humeral depression/elevation</option>
-                        </optgroup>
-                        <optgroup label="Force Plate Data">
-                            <option>Fore-Aft</option>
-                            <option>Lateral</option>
-                            <option>Normal</option>
-                        </optgroup>
-                    </select>
-                </label>
-            </div>
-
             <div class="col-12 text-center" style="padding-top: 30px">
                 <button type="button" id="get-graph" class="btn btn-primary"
                         style="width: 90%">Get Graph!
