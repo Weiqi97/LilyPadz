@@ -32,71 +32,19 @@ function toggleToadSelection() {
  * @returns {string} Pass the string to backend.
  */
 function getOption() {
-	// Get the toad selected.
-	let toad
-	if (getToggleStatus()) {
-		toad = Array.prototype.join.call(
-			$("#multiple-toad-selection").val(), "!"
-		)
-	} else {
-		toad = $("#one-toad-selection").val()
-	}
-
-	// Get the visualization method selected.
-	const visMethod = $("#vis-selection").val()
-
-	// Get variables selected.
-	const smallSeriesVar = $("#small-series-variable").val()
-	const clusteringVar = $("#clustering-variable").val()
-	const regressionXVar = $("#regression-x-variable").val()
-	const regressionYVar = $("#regression-y-variable").val()
-
 	// Return the JSON string.
 	return JSON.stringify({
-		small_series_variable: Array.prototype.join.call(smallSeriesVar, "!"),
-		clustering_variable: Array.prototype.join.call(clusteringVar, "!"),
-		regression_x_variable: regressionXVar,
-		regression_y_variable: regressionYVar,
-		toad_selection: toad,
-		vis_selection: visMethod,
-		sight: getSightStatus()
-	})
-}
-
-/**
- * Use an ajax call to get the parallel coordinate.
- */
-function getSmallSeries() {
-	// Clear the boxed before rendering new element.
-	$("#vis-holder-one").html("")
-	$("#vis-holder-two").html("")
-
-	// Display a spinner to indicate users that element are being loaded.
-	$("#spinner").css("display", "block")
-
-	// Do an ajax call to get the graph.
-	$.ajax({
-		url: "/small_series",
-		type: "POST",
-		data: getOption(),
-		contentType: "application/json; charset=utf-8"
-	})
-		.done(function (result) {
-			// Put the result in to the proper html div.
-			$("#vis-holder-one").html(result)
-		})
-		.fail(
-			// When ajax has error, print in the console.
-			function (jqXHR, textStatus, errorThrown) {
-				console.log(jqXHR.status)
-				console.log(`textStatus: ${textStatus}`)
-				console.log(`errorThrown: ${errorThrown}`)
-			})
-		.always(
-			function () {
-				$("#spinner").css("display", "none")
-			}
+		sight: getSightStatus(),
+		compare: getToggleStatus(),
+		num_cluster: $("#num-cluster").val(),
+		toad: $("#one-toad-selection").val(),
+		toads: Array.prototype.join.call(
+			$("#multiple-toad-selection").val(), "!"
+		),
+		variable: Array.prototype.join.call(
+			$("#variable").val(), "!"
 		)
+	})
 }
 
 /**
@@ -226,77 +174,139 @@ function upload() {
 }
 
 /**
+ * Use an ajax call to get the parallel coordinate.
+ */
+function getSmallSeries() {
+	// Clear the boxed before rendering new element.
+	$("#vis-holder-one").html("")
+	$("#vis-holder-two").html("")
+
+	// Display a spinner to indicate users that element are being loaded.
+	$("#spinner").css("display", "block")
+
+	// Do an ajax call to get the graph.
+	$.ajax({
+		url: "/small_series",
+		type: "POST",
+		data: getOption(),
+		contentType: "application/json; charset=utf-8"
+	})
+		.done(function (result) {
+			// Put the result in to the proper html div.
+			$("#vis-holder-one").html(result)
+		})
+		.fail(
+			// When ajax has error, print in the console.
+			function (jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR.status)
+				console.log(`textStatus: ${textStatus}`)
+				console.log(`errorThrown: ${errorThrown}`)
+			})
+		.always(
+			function () {
+				$("#spinner").css("display", "none")
+			}
+		)
+}
+
+/**
+ * Use an ajax call to get the cluster.
+ */
+function getCluster() {
+	// Clear the boxed before rendering new element.
+	$("#vis-holder-one").html("")
+	$("#vis-holder-two").html("")
+
+	// Display a spinner to indicate users that element are being loaded.
+	$("#spinner").css("display", "block")
+
+	// Do an ajax call to get the graph.
+	$.ajax({
+		url: "/cluster",
+		type: "POST",
+		data: getOption(),
+		contentType: "application/json; charset=utf-8"
+	})
+		.done(function (result) {
+			// Put the result in to the proper html div.
+			$("#vis-holder-one").html(result)
+		})
+		.fail(
+			// When ajax has error, print in the console.
+			function (jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR.status)
+				console.log(`textStatus: ${textStatus}`)
+				console.log(`errorThrown: ${errorThrown}`)
+			})
+		.always(
+			function () {
+				$("#spinner").css("display", "none")
+			}
+		)
+}
+
+
+/**
  * When page is done loading, run these functions.
  */
 $(function () {
-	// Save the toggle element.
+	// Save the toggle element and set it to on by default..
 	const toggle_mode = $("#mode-toggle")
-	const toggle_sight = $("#sight")
-	// Set the toggle to on by default - compare toads.
 	toggle_mode.bootstrapToggle("on")
-	toggle_sight.bootstrapToggle("on")
-	// Bind the toggle with on change element.
-	toggle_mode.change(() => {
-		toggleToadSelection()
-	})
 
-	// When click on upload button, trigger file input.
-	$("#file-input").click(() => {
-		$("#file-input-trigger").click()
-	})
+	const toggle_sight = $("#sight")
+	toggle_sight.bootstrapToggle("on")
+
+	// Bind the toggle with on change element.
+	toggle_mode.change(() => toggleToadSelection())
 
 	// Perform the upload.
-	$("#do-upload").click(() =>
-		upload()
-	)
+	$("#do-upload").click(() => upload())
+
+	// When click on upload button, trigger file input.
+	$("#file-input").click(() => $("#file-input-trigger").click())
 
 	// Generate the graph.
 	$("#get-graph").click(() => {
+		const visMethod = $("#vis-selection").val()
 		if (getToggleStatus()) {
 			if ($("#multiple-toad-selection").val().length < 2) {
 				$.confirm({
-				type: "red",
-				icon: "fas fa-exclamation-triangle",
-				theme: "modern",
-				title: "Error!",
-				content: "Please select at least two toads to compare",
-				buttons: {
-					confirm: {
-						text: "Got it!",
-						btnClass: "btn-info"
+					type: "red",
+					icon: "fas fa-exclamation-triangle",
+					theme: "modern",
+					title: "Error!",
+					content: "Please select at least two toads to compare",
+					buttons: {
+						confirm: {
+							text: "Got it!",
+							btnClass: "btn-info"
+						}
 					}
-				}
-			})
+				})
 			} else {
-				getSmallSeries()
+				if (visMethod === "Small Series") getSmallSeries()
+				else {getCluster()}
 			}
-
 		} else {
-			getSmallSeries()
+			if (visMethod === "Small Series") getSmallSeries()
+			else {getCluster()}
 		}
 
 	})
 
 	// Instruction alert button.
-	$("#instruction").click(() => {
-		displayInstruction()
-	})
+	$("#instruction").click(() => displayInstruction())
 
 	// Plotly Instruction alert button.
-	$("#plotly").click(() => {
-		displayPlotlyInstruction()
-	})
+	$("#plotly").click(() => displayPlotlyInstruction())
 
 	$("#vis-selection").change(() => {
 		const visSelection = $("#vis-selection").val()
 		if (visSelection === "Small Series") {
-			$("#small-series-display").css("display", "block")
 			$("#clustering-display").css("display", "none")
-			$("#regression-display").css("display", "none")
 		} else {
-			$("#small-series-display").css("display", "none")
 			$("#clustering-display").css("display", "block")
-			$("#regression-display").css("display", "none")
 		}
 	})
 })

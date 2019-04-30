@@ -196,14 +196,13 @@
                 </label>
             </div>
 
-            <div class="col-12 text-center" id="small-series-display"
-                 style="padding-top: 10px">
+            <div class="col-12 text-center" style="padding-top: 10px">
                 <h5 class="text-left" style="width: 90%; margin: auto">
                     <em>Choose variables of interest:</em>
                 </h5>
                 <hr>
                 <label style="width: 100%">
-                    <select class="selectpicker" id="small-series-variable"
+                    <select class="selectpicker" id="variable"
                             title="Choose Variables" data-width="90%"
                             data-style="btn-info" multiple
                             data-selected-text-format="count > 3">
@@ -228,28 +227,22 @@
             <div class="col-12 text-center" id="clustering-display"
                  style="padding-top: 10px; display: none">
                 <h5 class="text-left" style="width: 90%; margin: auto">
-                    <em>Choose variables of interest:</em>
+                    <em>Choose number of clusters:</em>
                 </h5>
                 <hr>
                 <label style="width: 100%">
-                    <select class="selectpicker" id="clustering-variable"
+                    <select class="selectpicker" id="num-cluster"
                             title="Choose Variables" data-width="90%"
-                            data-style="btn-info" multiple
-                            data-selected-text-format="count > 3">
-                        <optgroup label="Kinematic Data">
-                            <option selected>Elbow flexion/extension</option>
-                            <option selected>
-                                Humeral protraction/retraction
-                            </option>
-                            <option selected>
-                                Humeral depression/elevation
-                            </option>
-                        </optgroup>
-                        <optgroup label="Force Plate Data">
-                            <option selected>Fore-Aft</option>
-                            <option selected>Lateral</option>
-                            <option selected>Normal</option>
-                        </optgroup>
+                            data-style="btn-info">
+                        <option selected>2</option>
+                        <option selected>3</option>
+                        <option selected>4</option>
+                        <option selected>5</option>
+                        <option selected>6</option>
+                        <option selected>7</option>
+                        <option selected>8</option>
+                        <option selected>9</option>
+                        <option selected>10</option>
                     </select>
                 </label>
             </div>

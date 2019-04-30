@@ -1,63 +1,70 @@
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
+from typing import List
 from plotly.offline import plot
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA, SparsePCA
-from lilypadz.model.data_processor import get_all_processed_hop
+from sklearn.decomposition import PCA
+from lilypadz.model.data_processor import get_toad_processed_hop
 
 
-def get_data_for_clustering():
-    """Find the DataFrame that contains all data from hops for clustering."""
-    all_data = [
-        [f"{data_name} {data.sight}"] +
-        list(data.kinematic.mean(axis="index")) +
-        list(data.force_plate.mean(axis="index"))
-        for one_toad_hop in get_all_processed_hop().values()
-        for data_name, data in one_toad_hop.items()
-    ]
-
-    # all_data = [
-    #     [f"{data_name} {data.sight}"] +
-    #     list(data.kinematic.mean(axis="index")) +
-    #     list(data.force_plate.mean(axis="index"))
-    #     for data_name, data in get_toad_processed_hop(name="Atlas").items()
-    # ]
-
-    return pd.DataFrame(
-        index=[data[0] for data in all_data],
-        data=[data[1:] for data in all_data]
-    )
-
-
-def get_clustering_result(n_clusters: int):
+def get_all_clustering_result(n_clusters: int,
+                              names: List[str],
+                              variable: List[str]):
     """Generate a 2D plot that contains just the dots for K means result.
 
     :return: A plotly object hat has been converted to HTML format string.
     """
+    # Get the force plate column names.
+    fp_variables = list(
+        {"Fore-Aft", "Lateral", "Normal"}.intersection(variable)
+    )
+
+    # Get the kinematic column names.
+    kinematic_variables = list(
+        {"Elbow flexion/extension",
+         "Humeral protraction/retraction",
+         "Humeral depression/elevation"}.intersection(variable)
+    )
+
+    # Get desired toad data.
+    toads_hop = [
+        get_toad_processed_hop(name=name) for name in names
+    ]
+
+    # Get all data.
+    all_data = [
+        [f"{data_name} {data.sight}"] +
+        list(data.kinematic[kinematic_variables].mean(axis="index")) +
+        list(data.force_plate[fp_variables].mean(axis="index"))
+        for one_toad_hop in toads_hop
+        for data_name, data in one_toad_hop.items()
+    ]
+
+    data = pd.DataFrame(
+        index=[data[0] for data in all_data],
+        data=[data[1:] for data in all_data]
+    )
+
     # Get kMeans analyze result and unpack it.
-    data = get_data_for_clustering()
-    print(data.shape)
-    data = data.dropna(axis="index")
-    print(data.shape)
     k_means = KMeans(n_clusters=n_clusters)
-    reduced_data = PCA(n_components=2).fit_transform(data)
-    print(reduced_data)
-    print(reduced_data[:, 0])
+    reduced_data = PCA(n_components=3).fit_transform(data.dropna(axis="index"))
     k_means_index = k_means.fit_predict(reduced_data)
 
     # Get hop names.
     labels = data.index.values
 
-    # Separate x, y coordinates from the reduced data set.
+    # Separate x, y, z coordinates from the reduced data set.
     x_value = reduced_data[:, 0]
     y_value = reduced_data[:, 1]
+    z_value = reduced_data[:, 2]
 
     # Create plot for each cluster so the color will differ among clusters.
     data = [
-        go.Scatter(
+        go.Scatter3d(
             x=x_value[np.where(group_number == k_means_index)],
             y=y_value[np.where(group_number == k_means_index)],
+            z=z_value[np.where(group_number == k_means_index)],
             text=labels[np.where(group_number == k_means_index)],
             mode="markers",
             name=f"Cluster {group_number + 1}",
@@ -70,12 +77,119 @@ def get_clustering_result(n_clusters: int):
         for group_number in np.unique(k_means_index)
     ]
 
-    # Set the layout of the plot.
+    # Set the layout of the plot, mainly set the background color to grey.
     layout = go.Layout(
+        height=600,
+        hovermode="closest",
         title="K-Means Two Dimensional Scatter Plot",
-        xaxis=go.layout.XAxis(title='x-axis', showline=False),
-        yaxis=go.layout.YAxis(title='y-axis', showline=False),
-        hovermode="closest")
+        xaxis=dict(title='PC1', showline=False),
+        yaxis=dict(title='PC2', showline=False),
+        zaxis=dict(title='PC3', showline=False),
+        scene=dict(
+            xaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)"),
+            yaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)"),
+            zaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)")
+        )
+    )
 
     # Return the plotly figure and table.
-    plot(go.Figure(data=data, layout=layout))
+    return plot(
+        go.Figure(data=data, layout=layout),
+        show_link=False,
+        output_type="div",
+        include_plotlyjs=False
+    )
+
+
+def get_one_clustering_result(n_clusters: int,
+                              name: str,
+                              variable: List[str]):
+    """Generate a 2D plot that contains just the dots for K means result.
+
+    :return: A plotly object hat has been converted to HTML format string.
+    """
+    # Get the force plate column names.
+    fp_variables = list(
+        {"Fore-Aft", "Lateral", "Normal"}.intersection(variable)
+    )
+
+    # Get the kinematic column names.
+    kinematic_variables = list(
+        {"Elbow flexion/extension",
+         "Humeral protraction/retraction",
+         "Humeral depression/elevation"}.intersection(variable)
+    )
+
+    # Get all data.
+    all_data = [
+        [f"{data_name} {data.sight}"] +
+        list(data.kinematic[kinematic_variables].mean(axis="index")) +
+        list(data.force_plate[fp_variables].mean(axis="index"))
+        for data_name, data in get_toad_processed_hop(name=name).items()
+    ]
+
+    data = pd.DataFrame(
+        index=[data[0] for data in all_data],
+        data=[data[1:] for data in all_data]
+    )
+
+    # Get kMeans analyze result and unpack it.
+    k_means = KMeans(n_clusters=n_clusters)
+    reduced_data = PCA(n_components=3).fit_transform(data.dropna(axis="index"))
+    k_means_index = k_means.fit_predict(reduced_data)
+
+    # Get hop names.
+    labels = data.index.values
+
+    # Separate x, y, z coordinates from the reduced data set.
+    x_value = reduced_data[:, 0]
+    y_value = reduced_data[:, 1]
+    z_value = reduced_data[:, 2]
+
+    # Create plot for each cluster so the color will differ among clusters.
+    data = [
+        go.Scatter3d(
+            x=x_value[np.where(group_number == k_means_index)],
+            y=y_value[np.where(group_number == k_means_index)],
+            z=z_value[np.where(group_number == k_means_index)],
+            text=labels[np.where(group_number == k_means_index)],
+            mode="markers",
+            name=f"Cluster {group_number + 1}",
+            hoverinfo="text",
+            marker=dict(
+                size=12,
+                line=dict(width=1)
+            )
+        )
+        for group_number in np.unique(k_means_index)
+    ]
+
+    # Set the layout of the plot, mainly set the background color to grey.
+    layout = go.Layout(
+        height=600,
+        hovermode="closest",
+        title="K-Means Two Dimensional Scatter Plot",
+        xaxis=dict(title='PC1', showline=False),
+        yaxis=dict(title='PC2', showline=False),
+        zaxis=dict(title='PC3', showline=False),
+        scene=dict(
+            xaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)"),
+            yaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)"),
+            zaxis=dict(showbackground=True,
+                       backgroundcolor="rgb(230,230,230)")
+        )
+    )
+
+    # Return the plotly figure and table.
+    return plot(
+        go.Figure(data=data, layout=layout),
+        show_link=False,
+        output_type="div",
+        include_plotlyjs=False
+    )
+
