@@ -24,11 +24,18 @@ TOAD_HOP = {
     ]
 }
 
-# Toad name and their corresponding hop numbers.
+# Toad name and their corresponding color scale.
 TOAD_COLOR = {
     "Atlas": colorlover.interp(colorlover.scales["5"]["seq"]["Purples"], 7),
     "Fortuna": colorlover.interp(colorlover.scales["5"]["seq"]["Blues"], 7),
     "Gelos": colorlover.interp(colorlover.scales["5"]["seq"]["Oranges"], 7),
     "Talos": colorlover.interp(colorlover.scales["5"]["seq"]["Greens"], 7),
     "Zeus": colorlover.interp(colorlover.scales["5"]["seq"]["Reds"], 7)
+}
+
+# Color to distinguish blink and sight.
+SIGHT_BLIND_COLOR = {
+    "Sighted": colorlover.scales["3"]["qual"]["Set2"][0],
+    "Blind": colorlover.scales["3"]["qual"]["Set2"][1],
+    "Unknown": colorlover.scales["3"]["qual"]["Set2"][2]
 }
