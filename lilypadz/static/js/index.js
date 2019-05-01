@@ -47,6 +47,23 @@ function getOption() {
 	})
 }
 
+function convertToDataTable(table) {
+	table.DataTable({
+		// Do not paging.
+		info: false,
+		paging: false,
+		searching: false,
+		// Set the Scroll Height.
+		scrollY: 240,
+		// If not enough height, shrink the table height.
+		scrollCollapse: true,
+		// Specify all the download buttons that are displayed on the page.
+		buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
+		// Specify where the button is.
+		dom: `<'row'<'col-sm-12 text-left'B>><'row'<'col-sm-12 'tr>>`
+	})
+}
+
 /**
  * Display the instruction pop up.
  */
@@ -229,7 +246,10 @@ function getCluster() {
 	})
 		.done(function (result) {
 			// Put the result in to the proper html div.
-			$("#vis-holder-one").html(result)
+			$("#vis-holder-one").html(result["plot"])
+			const tableDiv = $("#vis-holder-two")
+			tableDiv.html(result["table"])
+			convertToDataTable(tableDiv.children())
 		})
 		.fail(
 			// When ajax has error, print in the console.
@@ -286,11 +306,15 @@ $(function () {
 				})
 			} else {
 				if (visMethod === "Small Series") getSmallSeries()
-				else {getCluster()}
+				else {
+					getCluster()
+				}
 			}
 		} else {
 			if (visMethod === "Small Series") getSmallSeries()
-			else {getCluster()}
+			else {
+				getCluster()
+			}
 		}
 
 	})

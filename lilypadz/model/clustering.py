@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 from typing import List
+
+from flask import jsonify
 from plotly.offline import plot
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
@@ -11,7 +13,7 @@ from lilypadz.model.data_processor import get_toad_processed_hop
 def get_all_clustering_result(n_clusters: int,
                               names: List[str],
                               variable: List[str]):
-    """Generate a 2D plot that contains just the dots for K means result.
+    """Generate a 3D plot that contains just the dots for K means result.
 
     :return: A plotly object hat has been converted to HTML format string.
     """
@@ -44,11 +46,11 @@ def get_all_clustering_result(n_clusters: int,
     data = pd.DataFrame(
         index=[data[0] for data in all_data],
         data=[data[1:] for data in all_data]
-    )
+    ).dropna(axis="index")
 
     # Get kMeans analyze result and unpack it.
     k_means = KMeans(n_clusters=n_clusters)
-    reduced_data = PCA(n_components=3).fit_transform(data.dropna(axis="index"))
+    reduced_data = PCA(n_components=3).fit_transform(data)
     k_means_index = k_means.fit_predict(reduced_data)
 
     # Get hop names.
@@ -79,35 +81,55 @@ def get_all_clustering_result(n_clusters: int,
 
     # Set the layout of the plot, mainly set the background color to grey.
     layout = go.Layout(
-        height=600,
+        height=500,
         hovermode="closest",
         title="K-Means Two Dimensional Scatter Plot",
-        xaxis=dict(title='PC1', showline=False),
-        yaxis=dict(title='PC2', showline=False),
-        zaxis=dict(title='PC3', showline=False),
         scene=dict(
-            xaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)"),
-            yaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)"),
-            zaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)")
+            xaxis=dict(
+                title="PC1",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
+            yaxis=dict(
+                title="PC2",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
+            zaxis=dict(
+                title="PC3",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
         )
     )
 
+    table = pd.DataFrame(data={
+        "Cluster #": [index + 1 for index in k_means_index],
+        "Document": labels,
+        "X-Coordinate": reduced_data[:, 0],
+        "Y-Coordinate": reduced_data[:, 1],
+        "Z-Coordinate": reduced_data[:, 2]
+    }).to_html(
+        index=False,
+        classes="table table-striped table-bordered text-center"
+    )
+
     # Return the plotly figure and table.
-    return plot(
-        go.Figure(data=data, layout=layout),
-        show_link=False,
-        output_type="div",
-        include_plotlyjs=False
+    return jsonify(
+        table=table,
+        plot=plot(
+            go.Figure(data=data, layout=layout),
+            show_link=False,
+            output_type="div",
+            include_plotlyjs=False
+        )
     )
 
 
 def get_one_clustering_result(n_clusters: int,
                               name: str,
                               variable: List[str]):
-    """Generate a 2D plot that contains just the dots for K means result.
+    """Generate a 3D plot that contains just the dots for K means result.
 
     :return: A plotly object hat has been converted to HTML format string.
     """
@@ -134,11 +156,11 @@ def get_one_clustering_result(n_clusters: int,
     data = pd.DataFrame(
         index=[data[0] for data in all_data],
         data=[data[1:] for data in all_data]
-    )
+    ).dropna(axis="index")
 
     # Get kMeans analyze result and unpack it.
     k_means = KMeans(n_clusters=n_clusters)
-    reduced_data = PCA(n_components=3).fit_transform(data.dropna(axis="index"))
+    reduced_data = PCA(n_components=3).fit_transform(data.dropna)
     k_means_index = k_means.fit_predict(reduced_data)
 
     # Get hop names.
@@ -169,27 +191,46 @@ def get_one_clustering_result(n_clusters: int,
 
     # Set the layout of the plot, mainly set the background color to grey.
     layout = go.Layout(
-        height=600,
+        height=500,
         hovermode="closest",
         title="K-Means Two Dimensional Scatter Plot",
-        xaxis=dict(title='PC1', showline=False),
-        yaxis=dict(title='PC2', showline=False),
-        zaxis=dict(title='PC3', showline=False),
         scene=dict(
-            xaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)"),
-            yaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)"),
-            zaxis=dict(showbackground=True,
-                       backgroundcolor="rgb(230,230,230)")
+            xaxis=dict(
+                title="PC1",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
+            yaxis=dict(
+                title="PC2",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
+            zaxis=dict(
+                title="PC3",
+                showline=False,
+                showbackground=True,
+                backgroundcolor="rgb(230,230,230)"),
         )
     )
 
-    # Return the plotly figure and table.
-    return plot(
-        go.Figure(data=data, layout=layout),
-        show_link=False,
-        output_type="div",
-        include_plotlyjs=False
+    table = pd.DataFrame(data={
+        "Cluster #": [index + 1 for index in k_means_index],
+        "Document": labels,
+        "X-Coordinate": reduced_data[:, 0],
+        "Y-Coordinate": reduced_data[:, 1],
+        "Z-Coordinate": reduced_data[:, 2]
+    }).to_html(
+        index=False,
+        classes="table table-striped table-bordered text-center"
     )
 
+    # Return the plotly figure and table.
+    return jsonify(
+        table=table,
+        plot=plot(
+            go.Figure(data=data, layout=layout),
+            show_link=False,
+            output_type="div",
+            include_plotlyjs=False
+        )
+    )

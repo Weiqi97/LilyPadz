@@ -18,6 +18,8 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Skranji">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-flash-1.5.6/b-html5-1.5.6/cr-1.5.0/r-2.2.2/sc-2.0.0/datatables.min.css"/>
     <link rel='shortcut icon' type='image/x-icon'
           href="{{ url_for("static", filename="favicon.png") }}">
     <link rel="stylesheet"
@@ -38,6 +40,12 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script type="text/javascript"
             src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-flash-1.5.6/b-html5-1.5.6/cr-1.5.0/r-2.2.2/sc-2.0.0/datatables.min.js"></script>
     <script type="text/javascript"
             src="{{ url_for("static", filename="js/index.js") }}"></script>
 </head>
@@ -205,7 +213,7 @@
                     <select class="selectpicker" id="variable"
                             title="Choose Variables" data-width="90%"
                             data-style="btn-info" multiple
-                            data-selected-text-format="count > 3">
+                            data-selected-text-format="count > 1">
                         <optgroup label="Kinematic Data">
                             <option selected>Elbow flexion/extension</option>
                             <option selected>
@@ -235,14 +243,14 @@
                             title="Choose Variables" data-width="90%"
                             data-style="btn-info">
                         <option selected>2</option>
-                        <option selected>3</option>
-                        <option selected>4</option>
-                        <option selected>5</option>
-                        <option selected>6</option>
-                        <option selected>7</option>
-                        <option selected>8</option>
-                        <option selected>9</option>
-                        <option selected>10</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
                     </select>
                 </label>
             </div>
@@ -258,7 +266,7 @@
         <i id="spinner" class="fas fa-4x fa-spinner fa-spin"
            style="display: none; margin-top: 350px"></i>
         <div id="vis-holder-one"></div>
-        <div id="vis-holder-two"></div>
+        <div id="vis-holder-two" style="padding-top: 10px"></div>
     </div>
 </div>
 </body>
