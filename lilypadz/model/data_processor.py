@@ -56,10 +56,10 @@ def get_one_processed_hop(name: str, hop: int) -> ProcessedHop:
     processed_kinematic = hop_kinematic_data.iloc[:, 1:].dropna(axis="index")
 
     # Normalize each column in kinematic data
-    scalar = preprocessing.StandardScaler()
-    if processed_kinematic.shape[0] != 0:
-        scaled_kinematic_data = scalar.fit_transform(processed_kinematic)
-        processed_kinematic = pd.DataFrame(scaled_kinematic_data)
+    # scalar = preprocessing.StandardScaler()
+    # if processed_kinematic.shape[0] != 0:
+    #     scaled_kinematic_data = scalar.fit_transform(processed_kinematic)
+    #     processed_kinematic = pd.DataFrame(scaled_kinematic_data)
 
     processed_kinematic.columns = ["Elbow flexion/extension",
                                    "Humeral protraction/retraction",

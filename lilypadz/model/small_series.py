@@ -44,45 +44,52 @@ def get_ss_for_one_toad(name: str, variable: List[str]):
         rows=len(variable),
         subplot_titles=variable
     )
-
     # Iterate over processed data for each hop.
     for index, (toad_hop, hop_data) in enumerate(processed_hop.items()):
+        for col_index, col_name in enumerate(kinematic_variables):
+                # Append trace to the subplot.
+                small_series.append_trace(
+                    col=1, row=col_index + 1,
+                    trace=go.Scatter(
+                        x=hop_data.kinematic.index,
+                        y=hop_data.kinematic[col_name],
+                        mode='lines',
+                        name=toad_hop,
+                        legendgroup=toad_hop,
+                        line=dict(color=color[index], shape="spline"),
+                        # Show the legend only for first trace.
+                        showlegend=True if col_index == 0 else False
+                    )
+                )
+
         # Iterate over each column within the hop data.
         for col_index, col_name in enumerate(fp_variables):
             # Append trace to the subplot.
             small_series.append_trace(
-                col=1, row=col_index + 1,
+                col=1, row=col_index + 1+len(kinematic_variables),
                 trace=go.Scatter(
                     x=hop_data.force_plate.index,
                     y=hop_data.force_plate[col_name],
                     mode="lines",
                     name=toad_hop,
                     legendgroup=toad_hop,
-                    line=dict(color=color[index], shape="spline"),
-                    # Show the legend only for first trace.
-                    showlegend=True if col_index == 0 else False
-                )
-            )
-
-        # Iterate over each column within the hop data.
-        for col_index, col_name in enumerate(kinematic_variables):
-            # Append trace to the subplot.
-            small_series.append_trace(
-                col=1, row=col_index + len(fp_variables) + 1,
-                trace=go.Scatter(
-                    x=hop_data.kinematic.index,
-                    y=hop_data.kinematic[col_name],
-                    mode='lines',
-                    name=toad_hop,
-                    showlegend=False,
-                    legendgroup=toad_hop,
                     line=dict(color=color[index], shape="spline")
                 )
             )
 
+        # Iterate over each column within the hop data.
+        
+
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40}
+        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        xaxis=dict(title='Time(0.1s)'),
+        yaxis=dict(title='Angle (degrees)'),
+        yaxis2=dict(title='Angle (degrees)'),
+        yaxis3=dict(title='Angle (degrees)'),
+        yaxis4=dict(title='Newtons'),
+        yaxis5=dict(title='Newtons'),
+        yaxis6=dict(title='Newtons')
     )
 
     return plot(
@@ -133,13 +140,13 @@ def get_ss_for_multiple_toads(names: List[str], variable: List[str]):
         # Iterate over processed data for each hop.
         for index, (toad_hop, hop_data) in enumerate(processed_hop.items()):
             # Iterate over each column within the hop data.
-            for col_index, col_name in enumerate(fp_variables):
+            for col_index, col_name in enumerate(kinematic_variables):
                 # Append trace to the subplot.
                 small_series.append_trace(
                     col=1, row=col_index + 1,
                     trace=go.Scatter(
-                        x=hop_data.force_plate.index,
-                        y=hop_data.force_plate[col_name],
+                        x=hop_data.kinematic.index,
+                        y=hop_data.kinematic[col_name],
                         mode="lines",
                         name=toad_hop,
                         legendgroup=name,
@@ -153,13 +160,13 @@ def get_ss_for_multiple_toads(names: List[str], variable: List[str]):
                 )
 
             # Iterate over each column within the hop data.
-            for col_index, col_name in enumerate(kinematic_variables):
+            for col_index, col_name in enumerate(fp_variables):
                 # Append trace to the subplot.
                 small_series.append_trace(
-                    col=1, row=col_index + len(fp_variables) + 1,
+                    col=1, row=col_index + len(kinematic_variables) + 1,
                     trace=go.Scatter(
-                        x=hop_data.kinematic.index,
-                        y=hop_data.kinematic[col_name],
+                        x=hop_data.force_plate.index,
+                        y=hop_data.force_plate[col_name],
                         mode='lines',
                         name=toad_hop,
                         showlegend=False,
@@ -173,7 +180,14 @@ def get_ss_for_multiple_toads(names: List[str], variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40}
+        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        xaxis=dict(title='Time(0.1s)'),
+        yaxis=dict(title='Angle (degrees)'),
+        yaxis2=dict(title='Angle (degrees)'),
+        yaxis3=dict(title='Angle (degrees)'),
+        yaxis4=dict(title='Newtons'),
+        yaxis5=dict(title='Newtons'),
+        yaxis6=dict(title='Newtons')
     )
 
     return plot(
@@ -217,13 +231,13 @@ def get_ss_for_one_toad_sight(name: str, variable: List[str]):
     # Iterate over processed data for each hop.
     for index, (toad_hop, hop_data) in enumerate(processed_hop.items()):
         # Iterate over each column within the hop data.
-        for col_index, col_name in enumerate(fp_variables):
+        for col_index, col_name in enumerate(kinematic_variables):
             # Append trace to the subplot.
             small_series.append_trace(
                 col=1, row=col_index + 1,
                 trace=go.Scatter(
-                    x=hop_data.force_plate.index,
-                    y=hop_data.force_plate[col_name],
+                    x=hop_data.kinematic.index,
+                    y=hop_data.kinematic[col_name],
                     mode="lines",
                     name=f"{toad_hop} {hop_data.sight}",
                     legendgroup=hop_data.sight,
@@ -237,13 +251,13 @@ def get_ss_for_one_toad_sight(name: str, variable: List[str]):
             )
 
         # Iterate over each column within the hop data.
-        for col_index, col_name in enumerate(kinematic_variables):
+        for col_index, col_name in enumerate(fp_variables):
             # Append trace to the subplot.
             small_series.append_trace(
-                col=1, row=col_index + len(fp_variables) + 1,
+                col=1, row=col_index + len(kinematic_variables) + 1,
                 trace=go.Scatter(
-                    x=hop_data.kinematic.index,
-                    y=hop_data.kinematic[col_name],
+                    x=hop_data.force_plate.index,
+                    y=hop_data.force_plate[col_name],
                     mode='lines',
                     name=f"{toad_hop} {hop_data.sight}",
                     showlegend=False,
@@ -257,7 +271,14 @@ def get_ss_for_one_toad_sight(name: str, variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40}
+        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        xaxis=dict(title='Time(0.1s)'),
+        yaxis=dict(title='Angle (degrees)'),
+        yaxis2=dict(title='Angle (degrees)'),
+        yaxis3=dict(title='Angle (degrees)'),
+        yaxis4=dict(title='Newtons'),
+        yaxis5=dict(title='Newtons'),
+        yaxis6=dict(title='Newtons')
     )
 
     return plot(
@@ -308,13 +329,13 @@ def get_ss_for_multiple_toads_sight(names: List[str], variable: List[str]):
         # Iterate over processed data for each hop.
         for index, (toad_hop, hop_data) in enumerate(processed_hop.items()):
             # Iterate over each column within the hop data.
-            for col_index, col_name in enumerate(fp_variables):
+            for col_index, col_name in enumerate(kinematic_variables):
                 # Append trace to the subplot.
                 small_series.append_trace(
                     col=1, row=col_index + 1,
                     trace=go.Scatter(
-                        x=hop_data.force_plate.index,
-                        y=hop_data.force_plate[col_name],
+                        x=hop_data.kinematic.index,
+                        y=hop_data.kinematic[col_name],
                         mode="lines",
                         name=f"{toad_hop} {hop_data.sight}",
                         legendgroup=hop_data.sight,
@@ -328,13 +349,13 @@ def get_ss_for_multiple_toads_sight(names: List[str], variable: List[str]):
                 )
 
             # Iterate over each column within the hop data.
-            for col_index, col_name in enumerate(kinematic_variables):
+            for col_index, col_name in enumerate(fp_variables):
                 # Append trace to the subplot.
                 small_series.append_trace(
-                    col=1, row=col_index + len(fp_variables) + 1,
+                    col=1, row=col_index + len(kinematic_variables) + 1,
                     trace=go.Scatter(
-                        x=hop_data.kinematic.index,
-                        y=hop_data.kinematic[col_name],
+                        x=hop_data.force_plate.index,
+                        y=hop_data.force_plate[col_name],
                         mode='lines',
                         name=f"{toad_hop} {hop_data.sight}",
                         showlegend=False,
@@ -348,7 +369,14 @@ def get_ss_for_multiple_toads_sight(names: List[str], variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40}
+        height=850, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        xaxis=dict(title='Time(0.1s)'),
+        yaxis=dict(title='Angle (degrees)'),
+        yaxis2=dict(title='Angle (degrees)'),
+        yaxis3=dict(title='Angle (degrees)'),
+        yaxis4=dict(title='Newtons'),
+        yaxis5=dict(title='Newtons'),
+        yaxis6=dict(title='Newtons')
     )
 
     return plot(
