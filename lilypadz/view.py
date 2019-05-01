@@ -84,6 +84,6 @@ def upload_file():
     # Get the file from flask.
     file = request.files["file"]
     # Save the file to proper location
-    file.save("data/data.csv")
+    file.save("lilypadz/data/dummy")
     # Return a dummy message to front end.
     return "GOOD"
