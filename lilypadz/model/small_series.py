@@ -81,7 +81,7 @@ def get_ss_for_one_toad(name: str, variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=800, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        height=825, margin={"l": 40, "r": 40, "b": 30, "t": 40},
         xaxis=dict(title='Time(0.1s)'),
         yaxis=dict(title='Angle (degrees)'),
         yaxis2=dict(title='Angle (degrees)'),
@@ -180,7 +180,7 @@ def get_ss_for_multiple_toads(names: List[str], variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=800, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        height=825, margin={"l": 40, "r": 40, "b": 30, "t": 40},
         xaxis=dict(title='Time(0.1s)'),
         yaxis=dict(title='Angle (degrees)'),
         yaxis2=dict(title='Angle (degrees)'),
@@ -272,7 +272,7 @@ def get_ss_for_one_toad_sight(name: str, variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=800, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        height=825, margin={"l": 40, "r": 40, "b": 30, "t": 40},
         xaxis=dict(title='Time(0.1s)'),
         yaxis=dict(title='Angle (degrees)'),
         yaxis2=dict(title='Angle (degrees)'),
@@ -371,7 +371,7 @@ def get_ss_for_multiple_toads_sight(names: List[str], variable: List[str]):
 
     # Adjust the settings of the plot.
     small_series["layout"].update(
-        height=800, margin={"l": 40, "r": 40, "b": 30, "t": 40},
+        height=825, margin={"l": 40, "r": 40, "b": 30, "t": 40},
         xaxis=dict(title='Time(0.1s)'),
         yaxis=dict(title='Angle (degrees)'),
         yaxis2=dict(title='Angle (degrees)'),
