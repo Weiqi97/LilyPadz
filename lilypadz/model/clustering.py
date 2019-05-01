@@ -159,7 +159,7 @@ def get_one_clustering_result(n_clusters: int,
 
     # Get kMeans analyze result and unpack it.
     k_means = KMeans(n_clusters=n_clusters)
-    reduced_data = PCA(n_components=3).fit_transform(data.dropna)
+    reduced_data = PCA(n_components=3).fit_transform(data)
     k_means_index = k_means.fit_predict(reduced_data)
 
     # Get hop names.

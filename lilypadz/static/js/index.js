@@ -58,7 +58,7 @@ function convertToDataTable(table) {
 		// If not enough height, shrink the table height.
 		scrollCollapse: true,
 		// Specify all the download buttons that are displayed on the page.
-		buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
+		buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
 		// Specify where the button is.
 		dom: `<'row'<'col-sm-12 text-left'B>><'row'<'col-sm-12 'tr>>`
 	})
@@ -307,13 +307,45 @@ $(function () {
 			} else {
 				if (visMethod === "Small Series") getSmallSeries()
 				else {
-					getCluster()
+					if ($("#variable").val().length < 3) {
+						$.confirm({
+							type: "red",
+							icon: "fas fa-exclamation-triangle",
+							theme: "modern",
+							title: "Error!",
+							content: "Please select at least two variables",
+							buttons: {
+								confirm: {
+									text: "Got it!",
+									btnClass: "btn-info"
+								}
+							}
+						})
+					} else {
+						getCluster()
+					}
 				}
 			}
 		} else {
 			if (visMethod === "Small Series") getSmallSeries()
 			else {
-				getCluster()
+				if ($("#variable").val().length < 3) {
+					$.confirm({
+						type: "red",
+						icon: "fas fa-exclamation-triangle",
+						theme: "modern",
+						title: "Error!",
+						content: "Please select at least three variables",
+						buttons: {
+							confirm: {
+								text: "Got it!",
+								btnClass: "btn-info"
+							}
+						}
+					})
+				} else {
+					getCluster()
+				}
 			}
 		}
 
